@@ -1,0 +1,11 @@
+@model IEnumerable<WebApplication1.Models.LibraryBook>
+@{ ViewData["Title"] = "Katalogas"; }
+
+<div class="page-heading"><div><p class="eyebrow">KNYGŲ KATALOGAS</p><h1>Katalogas</h1><p class="page-subtitle">Peržiūrėkite ir raskite bibliotekos knygas.</p></div><button class="btn btn-dark rounded-pill px-4" data-demo-action="Naujos knygos forma šiame demonstraciniame projekte nerodoma.">+ Pridėti knygą</button></div>
+<section class="catalog-toolbar"><div class="catalog-search"><span>⌕</span><input data-catalog-search type="search" placeholder="Ieškoti pagal pavadinimą ar autorių..." /></div><select data-catalog-genre aria-label="Filtruoti pagal žanrą"><option value="">Visi žanrai</option><option>Lietuvių klasika</option><option>Distopija</option><option>Grožinė literatūra</option><option>Memuarai</option><option>Istorija</option></select><span class="book-count"><b data-book-count>@Model.Count()</b> knygos</span></section>
+<section class="book-grid">
+@foreach (var book in Model) {
+    <article class="book-card" data-book-card data-search="@book.Title @book.Author" data-genre="@book.Genre"><a class="book-cover @book.CoverClass" asp-action="Book" asp-route-id="@book.Id"><span class="cover-rule"></span><small>@book.Author</small><strong>@book.Title</strong><i></i></a><div class="book-info"><span class="genre">@book.Genre</span><h2>@book.Title</h2><p>@book.Author · @book.Year</p><div class="book-card-footer"><span class="availability @(book.AvailableCopies == 0 ? "unavailable" : "")"><i></i>@(book.AvailableCopies == 0 ? "Nėra laisvų" : $"Laisvos {book.AvailableCopies} iš {book.TotalCopies}")</span><a asp-action="Book" asp-route-id="@book.Id" aria-label="Atidaryti @book.Title">→</a></div></div></article>
+}
+</section>
+<p class="empty-catalog d-none" data-empty-catalog>Nerasta knygų pagal pasirinktus kriterijus.</p>

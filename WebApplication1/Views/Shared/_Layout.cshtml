@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | Lentyna</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" asp-controller="Library" asp-action="Dashboard">
+                <span class="brand-mark">L</span>
+                <span>Lentyna</span>
+            </a>
+            <p class="sidebar-label">Bibliotekos valdymas</p>
+            <nav class="side-nav">
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" asp-controller="Library" asp-action="Dashboard"><span class="nav-icon">⌂</span> Suvestinė</a>
+                <a class="@(ViewContext.RouteData.Values["action"] is "Catalog" or "Book" ? "active" : "")" asp-controller="Library" asp-action="Catalog"><span class="nav-icon">▤</span> Katalogas</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Loans" ? "active" : "")" asp-controller="Library" asp-action="Loans"><span class="nav-icon">↗</span> Išdavimai</a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Reservations" ? "active" : "")" asp-controller="Library" asp-action="Reservations"><span class="nav-icon">▣</span> Rezervacijos <span class="nav-badge">3</span></a>
+                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Readers" ? "active" : "")" asp-controller="Library" asp-action="Readers"><span class="nav-icon">♙</span> Skaitytojai</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="profile-dot">BK</div>
+                <div><strong>Birutė Kazlauskė</strong><small>Bibliotekininkė</small></div>
+            </div>
+        </aside>
+        <div class="page-area">
+            <header class="topbar">
+                <button class="menu-button d-lg-none" type="button" aria-label="Atidaryti meniu" data-sidebar-toggle>☰</button>
+                <div class="topbar-search">
+                    <span>⌕</span><input type="search" placeholder="Ieškoti sistemoje..." aria-label="Ieškoti sistemoje" />
+                </div>
+                <div class="topbar-actions"><button class="icon-button" type="button" aria-label="Pranešimai">♧<i></i></button><span class="today">2026 m. lapkričio 8 d.</span></div>
+            </header>
+            <main class="content">@RenderBody()</main>
+        </div>
+    </div>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"><div class="toast border-0" id="demoToast" role="status" aria-live="polite"><div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Uždaryti"></button></div></div></div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
