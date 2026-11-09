@@ -1,0 +1,62 @@
+@model PortalPageViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="portal-breadcrumb">
+    @if (Model.BackPageId is not null)
+    {
+        @if (Model.BackPageId == "catalog")
+        {
+            <a asp-action="Catalog">← Grįžti į knygų katalogą</a>
+        }
+        else
+        {
+            <a asp-action="Page" asp-route-id="@Model.BackPageId">← Grįžti į ankstesnį langą</a>
+        }
+    }
+    else if (Model.Role == LibraryRoles.Librarian)
+    {
+        <a asp-action="Dashboard">← Grįžti į bibliotekininko darbo vietą</a>
+    }
+    else
+    {
+        <a asp-controller="Home" asp-action="Index">← Grįžti į rolės pasirinkimą</a>
+    }
+</div>
+
+<section class="portal-hero">
+    <div>
+        <p class="eyebrow">@Model.Section</p>
+        <h1>@Model.Title</h1>
+        <p class="page-subtitle">@Model.Description</p>
+    </div>
+    <span class="portal-role">@LibraryRoles.DisplayName(Model.Role)</span>
+</section>
+
+<section class="portal-details" aria-label="Lango duomenys">
+    @foreach (var detail in Model.Details)
+    {
+        <article><span>@detail.Label</span><strong>@detail.Value</strong></article>
+    }
+</section>
+
+@if (Model.Actions.Count > 0)
+{
+    <section class="portal-actions" aria-label="Galimi veiksmai">
+        <div><p class="eyebrow">TOLIMESNI VEIKSMAI</p><h2>Atidaryti kitą langą</h2></div>
+        <div class="action-grid">
+            @foreach (var item in Model.Actions)
+            {
+                @if (item.PageId == "catalog")
+                {
+                    <a class="portal-action" asp-action="Catalog"><div><strong>@item.Title</strong><small>@item.Description</small></div><b>→</b></a>
+                }
+                else
+                {
+                    <a class="portal-action" asp-action="Page" asp-route-id="@item.PageId"><div><strong>@item.Title</strong><small>@item.Description</small></div><b>→</b></a>
+                }
+            }
+        </div>
+    </section>
+}

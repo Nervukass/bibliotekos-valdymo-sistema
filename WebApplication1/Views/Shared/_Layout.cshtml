@@ -1,3 +1,10 @@
+@{
+    var role = Context.Session.GetString("LibraryRole");
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    var currentPage = Context.Request.Query["id"].ToString();
+    var roleName = LibraryRoles.DisplayName(role);
+    var isGuest = role is null;
+}
 <!DOCTYPE html>
 <html lang="lt">
 <head>
@@ -6,34 +13,55 @@
     <title>@ViewData["Title"] | Lentyna</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/portal.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="app-shell">
-        <aside class="sidebar" id="sidebar">
-            <a class="brand" asp-controller="Library" asp-action="Dashboard">
-                <span class="brand-mark">L</span>
-                <span>Lentyna</span>
-            </a>
-            <p class="sidebar-label">Bibliotekos valdymas</p>
-            <nav class="side-nav">
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")" asp-controller="Library" asp-action="Dashboard"><span class="nav-icon">⌂</span> Suvestinė</a>
-                <a class="@(ViewContext.RouteData.Values["action"] is "Catalog" or "Book" ? "active" : "")" asp-controller="Library" asp-action="Catalog"><span class="nav-icon">▤</span> Katalogas</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Loans" ? "active" : "")" asp-controller="Library" asp-action="Loans"><span class="nav-icon">↗</span> Išdavimai</a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Reservations" ? "active" : "")" asp-controller="Library" asp-action="Reservations"><span class="nav-icon">▣</span> Rezervacijos <span class="nav-badge">3</span></a>
-                <a class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Readers" ? "active" : "")" asp-controller="Library" asp-action="Readers"><span class="nav-icon">♙</span> Skaitytojai</a>
-            </nav>
-            <div class="sidebar-footer">
-                <div class="profile-dot">BK</div>
-                <div><strong>Birutė Kazlauskė</strong><small>Bibliotekininkė</small></div>
-            </div>
-        </aside>
+    <div class="app-shell @(isGuest ? "guest-shell" : "")">
+        @if (!isGuest)
+        {
+            <aside class="sidebar" id="sidebar">
+                <a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark">L</span><span>Lentyna</span></a>
+                <p class="sidebar-label">@roleName.ToUpperInvariant() POSISTEMĖ</p>
+                <nav class="side-nav">
+                    @if (role == LibraryRoles.Client)
+                    {
+                        <a class="@(currentPage == "profile" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="profile"><span class="nav-icon">◉</span> Mano profilis</a>
+                        <a class="@(action is "Catalog" or "Book" ? "active" : "")" asp-controller="Library" asp-action="Catalog"><span class="nav-icon">▤</span> Knygų peržiūra</a>
+                        <a class="@(currentPage == "my-reservations" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="my-reservations"><span class="nav-icon">◇</span> Rezervacijos</a>
+                        <a class="@(currentPage == "recommendations" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="recommendations"><span class="nav-icon">★</span> Rekomendacijos</a>
+                        <a class="@(currentPage == "loan-history" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="loan-history"><span class="nav-icon">↺</span> Istorija</a>
+                    }
+                    else if (role == LibraryRoles.Administrator)
+                    {
+                        <a class="@(currentPage == "admin-dashboard" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="admin-dashboard"><span class="nav-icon">▦</span> Darbo vieta</a>
+                        <a class="@(currentPage == "client-profiles" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="client-profiles"><span class="nav-icon">◉</span> Klientų profiliai</a>
+                        <a class="@(currentPage == "librarian-profiles" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="librarian-profiles"><span class="nav-icon">◉</span> Bibliotekininkai</a>
+                        <a class="@(currentPage == "statistics" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="statistics"><span class="nav-icon">▥</span> Statistika</a>
+                    }
+                    else
+                    {
+                        <a class="@(action == "Dashboard" ? "active" : "")" asp-controller="Library" asp-action="Dashboard"><span class="nav-icon">▦</span> Suvestinė</a>
+                        <a class="@(currentPage == "issue-book" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="issue-book"><span class="nav-icon">→</span> Išduoti knygą</a>
+                        <a class="@(currentPage == "renew-book" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="renew-book"><span class="nav-icon">↺</span> Atnaujinti knygą</a>
+                        <a class="@(action is "Catalog" or "Book" ? "active" : "")" asp-controller="Library" asp-action="Catalog"><span class="nav-icon">▤</span> Katalogas</a>
+                        <a class="@(currentPage == "add-book" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="add-book"><span class="nav-icon">+</span> Pridėti knygą</a>
+                        <a class="@(currentPage == "remove-book" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="remove-book"><span class="nav-icon">−</span> Pašalinti knygą</a>
+                        <a class="@(currentPage is "book-condition" or "assess-condition" ? "active" : "")" asp-controller="Library" asp-action="Page" asp-route-id="book-condition"><span class="nav-icon">✓</span> Knygų būklė</a>
+                        <a class="@(action == "Loans" ? "active" : "")" asp-controller="Library" asp-action="Loans"><span class="nav-icon">≡</span> Išdavimai</a>
+                    }
+                </nav>
+                <div class="sidebar-footer">
+                    <div class="profile-dot">@roleName[..1]</div>
+                    <div><strong>@roleName</strong><small>Demonstracinė paskyra</small></div>
+                    <a class="logout-link" asp-controller="Home" asp-action="Logout" title="Atsijungti" aria-label="Atsijungti">⇥</a>
+                </div>
+            </aside>
+        }
         <div class="page-area">
             <header class="topbar">
-                <button class="menu-button d-lg-none" type="button" aria-label="Atidaryti meniu" data-sidebar-toggle>☰</button>
-                <div class="topbar-search">
-                    <span>⌕</span><input type="search" placeholder="Ieškoti sistemoje..." aria-label="Ieškoti sistemoje" />
-                </div>
-                <div class="topbar-actions"><button class="icon-button" type="button" aria-label="Pranešimai">♧<i></i></button><span class="today">2026 m. lapkričio 8 d.</span></div>
+                @if (!isGuest) { <button class="menu-button d-lg-none" type="button" aria-label="Atidaryti meniu" data-sidebar-toggle>☰</button> }
+                <div class="topbar-title"><span class="topbar-dot"></span><span>@(isGuest ? "Bibliotekos informacinė sistema" : roleName)</span></div>
+                <div class="topbar-actions"><span class="today">2026 m. lapkričio 9 d.</span></div>
             </header>
             <main class="content">@RenderBody()</main>
         </div>

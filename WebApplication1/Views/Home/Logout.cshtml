@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Atsijungimas";
+    var role = Context.Session.GetString("LibraryRole");
+}
+
+<section class="logout-card" aria-labelledby="logout-title">
+    <span class="logout-icon">⇥</span>
+    <p class="eyebrow">PASKYROS SESIJA</p>
+    <h1 id="logout-title">Ar tikrai norite atsijungti?</h1>
+    <p>Paspaudus „Atsijungti“ būsite grąžinti į pradinį rolės pasirinkimo langą.</p>
+    <div class="logout-actions">
+        <form asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-dark rounded-pill px-4" type="submit">Atsijungti</button>
+        </form>
+        @if (role == LibraryRoles.Client)
+        {
+            <a class="btn btn-outline-dark rounded-pill px-4" asp-controller="Library" asp-action="Page" asp-route-id="profile">Atšaukti</a>
+        }
+        else if (role == LibraryRoles.Administrator)
+        {
+            <a class="btn btn-outline-dark rounded-pill px-4" asp-controller="Library" asp-action="Page" asp-route-id="admin-dashboard">Atšaukti</a>
+        }
+        else
+        {
+            <a class="btn btn-outline-dark rounded-pill px-4" asp-controller="Library" asp-action="Dashboard">Atšaukti</a>
+        }
+    </div>
+</section>

@@ -1,19 +1,19 @@
 @using WebApplication1.Models
 @{
-    ViewData["Title"] = "Suvestinė";
+    ViewData["Title"] = "Bibliotekininko darbo vieta";
     var recentLoans = (IEnumerable<LoanViewModel>)ViewBag.RecentLoans;
     var reservations = (IEnumerable<ReservationViewModel>)ViewBag.WaitingReservations;
 }
 
 <div class="page-heading">
-    <div><p class="eyebrow">BIBLIOTEKININKO DARBO VIETA</p><h1>Labas rytas, Birute!</h1><p class="page-subtitle">Štai kas vyksta bibliotekoje šiandien.</p></div>
-    <a class="btn btn-dark rounded-pill px-4" asp-action="Catalog"><span class="me-2">+</span> Pridėti knygą</a>
+    <div><p class="eyebrow">BIBLIOTEKININKO POSISTEMĖ</p><h1>Bibliotekininko darbo vieta</h1><p class="page-subtitle">Visi plane numatyti veiksmai pasiekiami iš šio lango.</p></div>
+    <a class="btn btn-dark rounded-pill px-4" asp-action="Page" asp-route-id="add-book">+ Pridėti knygą</a>
 </div>
 
 <section class="stats-grid" aria-label="Bibliotekos suvestinė">
     <article class="stat-card"><div class="stat-icon amber">▤</div><div><span>Visos knygos</span><strong>@ViewBag.TotalBooks</strong><small>egzemplioriai kataloge</small></div></article>
-    <article class="stat-card"><div class="stat-icon teal">↗</div><div><span>Aktyvūs išdavimai</span><strong>@ViewBag.ActiveLoans</strong><small>šiuo metu pas skaitytojus</small></div></article>
-    <article class="stat-card"><div class="stat-icon violet">▣</div><div><span>Rezervacijos</span><strong>@ViewBag.Reservations</strong><small>laukia įvykdymo</small></div></article>
+    <article class="stat-card"><div class="stat-icon teal">→</div><div><span>Aktyvūs išdavimai</span><strong>@ViewBag.ActiveLoans</strong><small>šiuo metu pas skaitytojus</small></div></article>
+    <article class="stat-card"><div class="stat-icon violet">◇</div><div><span>Rezervacijos</span><strong>@ViewBag.Reservations</strong><small>laukia įvykdymo</small></div></article>
     <article class="stat-card"><div class="stat-icon coral">!</div><div><span>Pavėluoti grąžinimai</span><strong>@ViewBag.OverdueLoans</strong><small>reikia priminti skaitytojui</small></div></article>
 </section>
 
@@ -25,9 +25,16 @@
     </article>
     <article class="panel"><div class="panel-header"><div><h2>Laukiančios rezervacijos</h2><p>Skaitytojai laukia knygų</p></div><a asp-action="Reservations">Visos <span>→</span></a></div>
         <div class="list-stack">
-        @foreach (var reservation in reservations) { <div class="reservation-row"><div class="avatar purple">@reservation.ReaderInitials</div><div class="row-main"><strong>@reservation.BookTitle</strong><span>@reservation.Reader · @reservation.Queue</span></div><button class="btn btn-sm btn-outline-dark rounded-pill px-3" data-demo-action="Skaitytojui išsiųstas pranešimas.">Pranešti</button></div> }
+        @foreach (var reservation in reservations) { <div class="reservation-row"><div class="avatar purple">@reservation.ReaderInitials</div><div class="row-main"><strong>@reservation.BookTitle</strong><span>@reservation.Reader · @reservation.Queue</span></div><a class="btn btn-sm btn-outline-dark rounded-pill px-3" asp-action="Page" asp-route-id="issue-book">Išduoti</a></div> }
         </div>
     </article>
 </section>
 
-<section class="quick-section"><div><p class="eyebrow">GREITI VEIKSMAI</p><h2>Dažniausiai naudojama</h2></div><div class="quick-actions"><a asp-action="Loans" class="quick-action"><span>↗</span><div><strong>Išduoti knygą</strong><small>Užregistruoti naują išdavimą</small></div><b>→</b></a><a asp-action="Reservations" class="quick-action"><span>▣</span><div><strong>Tvarkyti rezervacijas</strong><small>Paruošti knygą atsiėmimui</small></div><b>→</b></a><a asp-action="Readers" class="quick-action"><span>♙</span><div><strong>Rasti skaitytoją</strong><small>Peržiūrėti skaitytojo duomenis</small></div><b>→</b></a></div></section>
+<section class="quick-section"><div><p class="eyebrow">GREITI VEIKSMAI</p><h2>Bibliotekininko funkcijos</h2></div><div class="quick-actions">
+    <a asp-action="Page" asp-route-id="issue-book" class="quick-action"><span>→</span><div><strong>Išduoti knygą</strong><small>Užregistruoti naują išdavimą</small></div><b>→</b></a>
+    <a asp-action="Page" asp-route-id="renew-book" class="quick-action"><span>↺</span><div><strong>Atnaujinti knygą</strong><small>Pratęsti skolinimosi terminą</small></div><b>→</b></a>
+    <a asp-action="Page" asp-route-id="book-condition" class="quick-action"><span>✓</span><div><strong>Peržiūrėti būklę</strong><small>Įvertinti knygos fizinę būklę</small></div><b>→</b></a>
+    <a asp-action="Page" asp-route-id="remove-book" class="quick-action"><span>−</span><div><strong>Pašalinti knygą</strong><small>Nurašyti katalogo egzempliorių</small></div><b>→</b></a>
+    <a asp-action="Catalog" class="quick-action"><span>▤</span><div><strong>Knygų katalogas</strong><small>Peržiūrėti ir valdyti knygas</small></div><b>→</b></a>
+    <a asp-action="Readers" class="quick-action"><span>◉</span><div><strong>Skaitytojai</strong><small>Rasti kliento informaciją</small></div><b>→</b></a>
+</div></section>

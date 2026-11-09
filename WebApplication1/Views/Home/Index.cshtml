@@ -1,8 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Pradinis langas";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="role-chooser" aria-labelledby="role-title">
+    <div class="role-chooser-intro">
+        <p class="eyebrow">BIBLIOTEKOS INFORMACINĖ SISTEMA</p>
+        <h1 id="role-title">Pasirinkite savo rolę</h1>
+        <p>Pasirinkimas atveria tik tai rolei skirtus langus. Visuose languose veikia nuorodos grįžti į ankstesnį arba pagrindinį langą.</p>
+        @if (ViewBag.Message is string message)
+        {
+            <div class="role-message" role="status">@message</div>
+        }
+    </div>
+
+    <div class="role-cards">
+        <form asp-action="SelectRole" method="post" class="role-card client-card">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="role" value="client" />
+            <span class="role-icon">◉</span>
+            <span class="role-name">Klientas</span>
+            <span class="role-description">Profilis, rezervacijos, rekomendacijos, skolinimosi istorija ir atsiliepimai.</span>
+            <button type="submit" class="btn btn-dark rounded-pill">Atidaryti kliento profilį <span>→</span></button>
+        </form>
+        <form asp-action="SelectRole" method="post" class="role-card admin-card">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="role" value="administrator" />
+            <span class="role-icon">▦</span>
+            <span class="role-name">Administratorius</span>
+            <span class="role-description">Klientų ir darbuotojų profiliai, baudos, pranešimai bei statistika.</span>
+            <button type="submit" class="btn btn-dark rounded-pill">Atidaryti administravimą <span>→</span></button>
+        </form>
+        <form asp-action="SelectRole" method="post" class="role-card librarian-card">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="role" value="librarian" />
+            <span class="role-icon">▤</span>
+            <span class="role-name">Bibliotekininkas</span>
+            <span class="role-description">Knygų išdavimas, pratęsimas, katalogas, būklės vertinimas ir grąžinimai.</span>
+            <button type="submit" class="btn btn-dark rounded-pill">Atidaryti darbo vietą <span>→</span></button>
+        </form>
+    </div>
+</section>

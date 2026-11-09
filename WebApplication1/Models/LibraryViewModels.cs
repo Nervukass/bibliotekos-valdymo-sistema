@@ -1,5 +1,41 @@
 namespace WebApplication1.Models;
 
+public static class LibraryRoles
+{
+    public const string Client = "client";
+    public const string Administrator = "administrator";
+    public const string Librarian = "librarian";
+
+    public static readonly string[] All = [Client, Administrator, Librarian];
+
+    public static string DisplayName(string? role) => role switch
+    {
+        Client => "Klientas",
+        Administrator => "Administratorius",
+        Librarian => "Bibliotekininkas",
+        _ => "Svečias"
+    };
+}
+
+public sealed class PortalActionViewModel
+{
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+    public required string PageId { get; init; }
+}
+
+public sealed class PortalPageViewModel
+{
+    public required string Id { get; init; }
+    public required string Section { get; init; }
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+    public required string Role { get; init; }
+    public string? BackPageId { get; init; }
+    public IReadOnlyList<(string Label, string Value)> Details { get; init; } = [];
+    public IReadOnlyList<PortalActionViewModel> Actions { get; init; } = [];
+}
+
 public sealed class LibraryBook
 {
     public int Id { get; init; }
